@@ -1,4 +1,5 @@
 %% Modelling and simulation of thw pinion system of a CNC machine
+%% Name: Georgios Krommydas, A.M.: 02121208
 
 clear;
 clc;
@@ -15,7 +16,7 @@ r = 0.1;                    % m
 Jp = 0.0025;                % Nms^2/rad
 kT = 1;                     % Nm/A
 t = 0:0.0001:40;            % sec
-
+is = 5;                     % A
 %% System in State Space Form
 A = [-Bm/Jm -1/Jm 0; K 0 -K/r; 0 1/(Jp/r + mc*r) -B1/(Jp/(r^2) + mc)];
 B = [kT/Jm; 0; 0];
@@ -27,7 +28,9 @@ system = ss(A,B,C,D);
 system.OutputName = {'w_J_m','T_K','v_m_c'};
 stateVector = lsim(system,u,t,x0);
 
+xss = -inv(A)*B*is;
 
+disp(xss);
 figure(1);
 clf;
 subplot(3,1,1);

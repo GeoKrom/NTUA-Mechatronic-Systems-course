@@ -1,5 +1,4 @@
 %% Modelling and simulation of thw pinion system of a CNC machine
-%% Name: Georgios Krommydas, A.M.: 02121208
 
 clear;
 clc;

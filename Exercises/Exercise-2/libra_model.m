@@ -1,4 +1,5 @@
 %% Modelling and simulation of a moving libra system 
+%% Name: Georgios Krommydas, A.M.: 02121208
 
 clear;
 clc;
@@ -12,13 +13,16 @@ m = 0.5;                % kg
 K = 10000;              % N/m
 B = 5;                  % Ns/m
 kc = 5;                 % N/A
-t = 0:0.0001:1;        % sec
+t = 0:0.0001:1;         % sec
+Vs = 10;                % V
+is = 2.5;               % A
 
-%% State Space System 1
+%% State Space System Analysis 1
 
+% System
 A1 = [-R/L   0    0; 
       0     0     K; 
-     -kc/m -1/m  -B/m];
+     kc/m -1/m  -B/m];
 
 B1 = [1/L; 0; 0];
 
@@ -29,6 +33,10 @@ x0 = [0 0 0];
 system = ss(A1,B1,C1,D1);
 system.OutputName = {'i_L','F_K','v_m'};
 stateVector = lsim(system,u,t,x0);
+
+% Convergence Value
+xss1 = -inv(A1)*B1*Vs;
+disp(xss1);
 
 figure(1);
 clf;
@@ -54,7 +62,7 @@ grid on;
 legend('State Variable 3 (Libra Mass Velocity)','Location','southeast');
 
 %% Poles of the system
-p1 = [1 4010 60000 80000000];
+p1 = [1 (B/m+R/L) (K/m +(B*R)/(L*m)) (R*K)/(L*m)];
 r1 = roots(p1);
 
 figure(2);
@@ -65,7 +73,7 @@ xlabel("Re","fontsize", 16);
 ylabel("Im", "fontsize", 16);
 legend('Poles of the system','Location','northeast','fontsize',14);
 
-p2 = [4010 60000 80000000];
+p2 = [1 B/m K/m];
 r2 = roots(p2);
 
 figure(3);
@@ -76,24 +84,25 @@ xlabel("Re","fontsize", 16);
 ylabel("Im", "fontsize", 16);
 legend('Poles of the system','Location','northeast','fontsize',14);
 
-s = tf('s');
+%% State Space System Analysis 2
 
-sys1 = (-kc/m)*s/(4010*s^2 +60000*s + 80000000);
-
-stepplot(sys1)
-%% State Space 2
-
+% System
 A2 = [0 K; -1/m -B/m];
-B2 = [0; -kc/m];
+B2 = [0; kc/m];
 C2 = eye(2);
 D2 = 0;
-u2 = 1*ones(size(t));
+u2 = 2.5*ones(size(t));
 x1 = [0 0];
 sys2 = ss(A2,B2,C2,D2);
 sys2.OutputName = {'F_K','v_m'};
 stateVector2 = lsim(sys2,u2,t,x1);
 
-figure(5);
+% Convergence Value
+xss2 = -inv(A2)*B2*is;
+disp(xss2);
+
+% Plots
+figure(4);
 clf;
 subplot(2,1,1);
 plot(t, stateVector2(:,1),'r-');
@@ -108,17 +117,3 @@ xlabel("time [sec]");
 ylabel("v_m [m/sec]");
 grid on;
 legend('State Variable 2 (Libra Mass Velocity)','Location','northeast');
-
-
-%% Poles of the system
-p3 = [1 2.5 5000];
-r3 = roots(p3);
-
-figure(6);
-clf;
-plot(real(r3),imag(r3),'kx','LineWidth', 2);
-grid;
-xlabel("Re","fontsize", 16);
-ylabel("Im", "fontsize", 16);
-legend('Poles of the system','Location','northeast','fontsize',14);
-

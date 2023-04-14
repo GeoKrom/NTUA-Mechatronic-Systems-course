@@ -1,4 +1,5 @@
 %% Modelling and simulation of a moving libra system 
+%% Name: Georgios Krommydas, A.M.: 02121208
 
 clear;
 clc;
@@ -14,12 +15,12 @@ B = 5;                  % Ns/m
 kc = 5;                 % N/A
 t = 0:0.0001:1;         % sec
 Vs = 10;                % V
-is = 2.5;               % A
+is = 1.5;               % A
 
 %% State Space System Analysis 1
 
 % System
-A1 = [-R/L   0    0; 
+A1 = [-R/L   0   -kc/L; 
       0     0     K; 
      kc/m -1/m  -B/m];
 
@@ -27,7 +28,7 @@ B1 = [1/L; 0; 0];
 
 C1 = eye(3);   % or [0 0 1];
 D1 = 0;
-u = 10*ones(size(t));
+u = Vs*ones(size(t));
 x0 = [0 0 0];
 system = ss(A1,B1,C1,D1);
 system.OutputName = {'i_L','F_K','v_m'};
@@ -61,7 +62,7 @@ grid on;
 legend('State Variable 3 (Libra Mass Velocity)','Location','southeast');
 
 %% Poles of the system
-p1 = [1 (B/m+R/L) (K/m +(B*R)/(L*m)) (R*K)/(L*m)];
+p1 = [1 (B/m+R/L) (K/m +(B*R)/(L*m)+kc^2/(L*m)) (R*K)/(L*m)];
 r1 = roots(p1);
 
 figure(2);
@@ -90,7 +91,7 @@ A2 = [0 K; -1/m -B/m];
 B2 = [0; kc/m];
 C2 = eye(2);
 D2 = 0;
-u2 = 2.5*ones(size(t));
+u2 = is*ones(size(t));
 x1 = [0 0];
 sys2 = ss(A2,B2,C2,D2);
 sys2.OutputName = {'F_K','v_m'};

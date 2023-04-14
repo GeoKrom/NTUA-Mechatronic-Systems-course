@@ -1,5 +1,4 @@
 %% Modelling and simulation of a moving libra system 
-%% Name: Georgios Krommydas, A.M.: 02121208
 
 clear;
 clc;

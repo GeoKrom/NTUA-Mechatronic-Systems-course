@@ -9,7 +9,7 @@ The mobile robot uses two DC Motors (125 RPM) with wheel encoders and L298N driv
 
 # Authors
 
-George Kassavetakis
+[George Kassavetakis](https://github.com/Gkassavetakis)
 
 Aggelos Kousanas
 
